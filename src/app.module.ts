@@ -9,6 +9,9 @@ import { AuthService } from './auth/auth.service';
 import { AuthModule } from './auth/auth.module';
 import { TokensModule } from './tokens/tokens.module';
 import { UserTokens } from "./tokens/tokens.model";
+import { ConversationsModule } from './conversations/conversations.module';
+import { Conversations } from "./conversations/conversations.model";
+import { Participants } from "./models/participants.model";
 
 
 @Module({
@@ -28,12 +31,16 @@ import { UserTokens } from "./tokens/tokens.model";
             models: [
                 User,
                 UserTokens,
+                Conversations,
+                Participants
             ],
-            autoLoadModels: true
+            autoLoadModels: true,
+            synchronize: true
         }),
         UserModule,
         AuthModule,
-        TokensModule
+        TokensModule,
+        ConversationsModule
     ]
 })
 export class AppModule {}

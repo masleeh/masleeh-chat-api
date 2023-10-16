@@ -24,7 +24,7 @@ export class AuthService {
         const user = await this.userService.createUser({ ...dto, password })
         const tokens = await this.tokensService.generateUserTokens(user.user_id)
 
-        return { access_token: tokens.accessToken, refresh_token: tokens.refreshToken }
+        return { access_token: tokens.accessToken, refresh_token: tokens.refreshToken, userData: this.userService.safeFilterUser(user) }
     }
 
     async login(dto: loginUserDto) {
@@ -36,6 +36,6 @@ export class AuthService {
 
         const tokens = await this.tokensService.generateUserTokens(user.user_id)
 
-        return { access_token: tokens.accessToken, refresh_token: tokens.refreshToken }
+        return { access_token: tokens.accessToken, refresh_token: tokens.refreshToken, userData: this.userService.safeFilterUser(user) }
     }
 }
