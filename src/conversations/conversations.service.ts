@@ -18,11 +18,17 @@ export class ConversationsService {
     async getAllConversations(user_id: string) {
         
         const userConvs = await this.convRepo.findAll({
+            attributes: {
+                exclude: ['createdAt']
+            },
             include: [
                 {
                     model: User,
-                    attributes: ['user_id', 'username', 'profile_pic'],
-                    required: true,
+                    attributes: {
+                        include: ['user_id', 'username', 'profile_pic'],
+                        exclude: ['password', 'createdAt', 'updatedAt']
+                    },
+                    required: true
                 },
                 {
                     model: Participants,

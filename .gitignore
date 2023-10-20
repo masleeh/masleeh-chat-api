@@ -5,6 +5,9 @@
 # Files
 *.env
 
+# Static
+/static
+
 # Logs
 logs
 *.log

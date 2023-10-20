@@ -37,6 +37,10 @@ export class TokensService {
         return {accessToken, userData: this.userService.safeFilterUser(user)}
     }
 
+    async deleteToken(token: string) {
+        await this.userTokensRepo.destroy({where: { refresh_token: token }})
+    }
+
     private async saveRefreshToken(dto: saveTokenDto) {
         const token = await this.userTokensRepo.create(dto)
         return token

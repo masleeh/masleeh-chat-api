@@ -17,7 +17,7 @@ export class ConversationsController {
 
     @ApiOperation({ summary: 'Get all user conversations' })
     @ApiResponse({ status: 200, type: Conversations })
-    @UseGuards(AuthGuard)
+    // @UseGuards(AuthGuard)
     @UsePipes(new ZodValidationPipe(getAllConversationsSchema))
     @Get()
     getAllConversations(@Query() dto: getAllConversationsDto) {

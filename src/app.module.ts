@@ -5,19 +5,25 @@ import { UserController } from './user/user.controller';
 import { UserModule } from './user/user.module';
 import { User } from "./user/user.model";
 import { AuthController } from './auth/auth.controller';
-import { AuthService } from './auth/auth.service';
 import { AuthModule } from './auth/auth.module';
 import { TokensModule } from './tokens/tokens.module';
 import { UserTokens } from "./tokens/tokens.model";
 import { ConversationsModule } from './conversations/conversations.module';
 import { Conversations } from "./conversations/conversations.model";
 import { Participants } from "./models/participants.model";
+import { FilesModule } from './files/files.module';
+import { ServeStaticModule } from "@nestjs/serve-static";
+import { resolve } from "path";
 
 
 @Module({
     controllers: [UserController, AuthController],
-    providers: [AuthService],
+    providers: [],
     imports: [
+        ServeStaticModule.forRoot({
+            rootPath: resolve(__dirname, '..', 'static', 'users'),
+            serveRoot: '/users'
+        }),
         ConfigModule.forRoot({
             envFilePath: `.${process.env.NODE_ENV}.env`
         }),
@@ -40,7 +46,8 @@ import { Participants } from "./models/participants.model";
         UserModule,
         AuthModule,
         TokensModule,
-        ConversationsModule
+        ConversationsModule,
+        FilesModule
     ]
 })
 export class AppModule {}

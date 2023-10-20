@@ -43,7 +43,14 @@ export class AuthController {
     async refreshToken(@Req() req: Request, @Res() res: Response) {
         const { refreshToken } = req.cookies
         const result = await this.tokensService.refreshToken(refreshToken)
-        // res.cookie('refreshToken', result.refreshToken, { maxAge: 1000*60*60*24*15, httpOnly: true, secure: true })
         return res.status(200).json({ access_token: result.accessToken, userData: result.userData })
+    }
+
+    @Post('/logout')
+    async logout(@Req() req: Request, @Res() res: Response) {
+        const {refreshToken} = req.cookies
+        await this.tokensService.deleteToken(refreshToken)
+        res.clearCookie('refreshToken')
+        return res.status(200).json({ message: 'Successfully logged out' })
     }
 }
