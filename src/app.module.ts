@@ -14,6 +14,8 @@ import { Participants } from "./models/participants.model";
 import { FilesModule } from './files/files.module';
 import { ServeStaticModule } from "@nestjs/serve-static";
 import { resolve } from "path";
+import { MessagesModule } from './messages/messages.module';
+import { Messages } from "./messages/messages.model";
 
 
 @Module({
@@ -38,7 +40,8 @@ import { resolve } from "path";
                 User,
                 UserTokens,
                 Conversations,
-                Participants
+                Participants,
+                Messages
             ],
             autoLoadModels: true,
             synchronize: true
@@ -47,7 +50,8 @@ import { resolve } from "path";
         AuthModule,
         TokensModule,
         ConversationsModule,
-        FilesModule
+        FilesModule,
+        MessagesModule
     ]
 })
 export class AppModule {}

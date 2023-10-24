@@ -7,6 +7,7 @@ import { searchUsersDto } from './dto/searchUsers.dto';
 import { Op } from 'sequelize';
 import { uploadPicDto } from './dto/uploadPic.dto';
 import { FilesService } from 'src/files/files.service';
+import { updateUserInfoDto } from './dto/updateUserInfo.dto';
 
 @Injectable()
 export class UserService {
@@ -41,7 +42,6 @@ export class UserService {
                     [Op.substring]: dto.username
                 }
         }})
-
         return users
     }
 
@@ -56,7 +56,6 @@ export class UserService {
     async uploadProfilePic(image: Express.Multer.File, dto: uploadPicDto ) {
         if (!dto.user_id) throw new HttpException('User_id is not specified', HttpStatus.BAD_REQUEST)
         const fileName = await this.filesService.createFile(image, ['users'])
-
         const user = await this.userRepo.findOne({
             where: {
                 user_id: dto.user_id
@@ -65,13 +64,34 @@ export class UserService {
                 exclude: ['password', 'createdAt', 'updatedAt']
             }
         })
-
         await this.filesService.deleteFile(user.profile_pic)
         user.update({
             profile_pic: fileName
         })
         await user.save()
-        
         return { profile_pic: fileName }
+    }
+
+    async updateUserInfo(dto: updateUserInfoDto) {
+        const checkUser = await this.userRepo.findOne({
+            where: {
+                username: dto.username
+            }
+        })
+        if (checkUser) throw new HttpException('Username is already in use', HttpStatus.BAD_REQUEST)
+        const user = await this.userRepo.findOne({
+            where: {
+                user_id: dto.user_id
+            },
+            attributes: {
+                exclude: ['password', 'createdAt', 'updatedAt']
+            }
+        })
+        if (!user) throw new HttpException('User not found', HttpStatus.BAD_REQUEST)
+        user.update({
+            username: dto.username
+        })
+        await user.save()
+        return user
     }
 }

@@ -7,6 +7,8 @@ import { nanoid } from 'nanoid';
 import { Participants } from 'src/models/participants.model';
 import { Op } from 'sequelize';
 import sequelize from 'sequelize';
+import { updateLastMessageDto } from './dto/updateMessage.dto';
+import { Messages } from 'src/messages/messages.model';
 
 @Injectable()
 export class ConversationsService {
@@ -36,6 +38,17 @@ export class ConversationsService {
                     required: true,
                     where: {
                         '$participants.user_id$': user_id
+                    }
+                },
+                {
+                    model: Messages,
+                    where: {
+                        mes_id: {
+                            [Op.col]: "conversations.last_message"
+                        }
+                    },
+                    attributes: {
+                        exclude: ["createdAt, updatedAt"]
                     }
                 }
             ],
@@ -87,5 +100,11 @@ export class ConversationsService {
         return {conv_id: userConv.conv_id}
     }
 
-    
+    async updateLastMessage(dto: updateLastMessageDto) {
+        await this.convRepo.update({ last_message: dto.mes_id }, {
+            where: {
+                conv_id: dto.conv_id
+            }
+        })
+    }
 }

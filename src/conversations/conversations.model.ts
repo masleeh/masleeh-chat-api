@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { BelongsToMany, Column, DataType, HasMany, Model, Table } from "sequelize-typescript";
+import { Messages } from "src/messages/messages.model";
 import { AddParticipant, Participants } from "src/models/participants.model";
 import { User } from "src/user/user.model";
 
@@ -34,7 +35,10 @@ export class Conversations extends Model<Conversations, CreateConversation> {
     @BelongsToMany(() => User, () => Participants)
     users: User[]
     
-    @ApiProperty({ example: [{username: 'masleeh', user_id: 'aWqdVyzN-BT7', profile_pic: 'localhost:5000/pics/7p3YxyvZruvN'}], description: 'Last message' })
+    @ApiProperty({ example: [{username: 'masleeh', user_id: 'aWqdVyzN-BT7', profile_pic: 'localhost:5000/pics/7p3YxyvZruvN'}], description: 'Participants' })
     @HasMany(() => Participants)
     participants: Participants[]
+
+    @HasMany(() => Messages)
+    message: Messages
 }

@@ -19,7 +19,7 @@ import { AuthModule } from 'src/auth/auth.module';
     forwardRef(() => AuthModule)
   ],
   exports: [
-
+    ConversationsService
   ]
 })
 export class ConversationsModule {}

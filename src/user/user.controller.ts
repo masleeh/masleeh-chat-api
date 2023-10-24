@@ -1,4 +1,4 @@
-import { Body, Controller, HttpStatus, ParseFilePipeBuilder, Post, UploadedFile, UseGuards, UseInterceptors, UsePipes } from '@nestjs/common';
+import { Body, Controller, HttpStatus, ParseFilePipeBuilder, Patch, Post, UploadedFile, UseGuards, UseInterceptors, UsePipes } from '@nestjs/common';
 import { UserService } from './user.service';
 import { searchUsersDto, searchUsersDtoSchema } from './dto/searchUsers.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
@@ -7,6 +7,7 @@ import { ApiOperation, ApiResponse, ApiTags, OmitType } from '@nestjs/swagger';
 import { User } from './user.model';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { uploadPicDto } from './dto/uploadPic.dto';
+import { updateUserInfoDto, updateUserInfoDtoSchema } from './dto/updateUserInfo.dto';
 
 @ApiTags('Users')
 @Controller('/user')
@@ -44,5 +45,14 @@ export class UserController {
         ) image: Express.Multer.File
     ) {
         return await this.userService.uploadProfilePic(image, dto)
+    }
+
+    @ApiOperation({summary: 'Update user info'})
+    @ApiResponse({ status: 201, type: User })
+    @UseGuards(AuthGuard)
+    @UsePipes(new ZodValidationPipe(updateUserInfoDtoSchema))
+    @Patch()
+    async updateUserInfo(@Body() dto: updateUserInfoDto) {
+        return await this.userService.updateUserInfo(dto)
     }
 }
